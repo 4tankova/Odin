@@ -21,12 +21,6 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             text-align: center;
         }
-        .title {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 10px;
-            color: #333;
-        }
         .logo {
             display: block;
             max-width: 150px;
@@ -42,20 +36,6 @@
             color: #f4d03f;
         }
         .sub-title a:hover {
-            text-decoration: underline;
-        }
-        .footer {
-            margin-top: 30px;
-            font-size: 12px;
-            color: #555;
-            text-align: center;
-        }
-        .footer a {
-            text-decoration: none;
-            color: #007bff;
-            font-weight: bold;
-        }
-        .footer a:hover {
             text-decoration: underline;
         }
         h1 {
@@ -113,9 +93,24 @@
             border: none;
             border-radius: 5px;
             cursor: pointer;
+            display: none;
         }
         .share-btn:hover {
             background-color: #218838;
+        }
+        .footer {
+            margin-top: 30px;
+            font-size: 12px;
+            color: #555;
+            text-align: center;
+        }
+        .footer a {
+            text-decoration: none;
+            color: #007bff;
+            font-weight: bold;
+        }
+        .footer a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
@@ -130,23 +125,23 @@
         <h1>Розрахунок витрати палива</h1>
         <form id="fuel-form">
             <label for="a">A (нормативна витрата палива, л/100 км):</label>
-            <input type="number" id="a" placeholder="Введіть значення A" required>
+            <input type="number" id="a" placeholder="Введіть значення A">
 
             <label for="b">B (км з вантажем):</label>
-            <input type="number" id="b" placeholder="Введіть значення B" required>
+            <input type="number" id="b" placeholder="Введіть значення B">
 
             <label for="v">V (км без вантажу):</label>
-            <input type="number" id="v" placeholder="Введіть значення V" required>
+            <input type="number" id="v" placeholder="Введіть значення V">
 
             <label for="g">G (відпрацьовано мотогодин):</label>
-            <input type="number" id="g" placeholder="Введіть значення G" required>
+            <input type="number" id="g" placeholder="Введіть значення G">
 
             <button type="button" onclick="calculateFuel()">Розрахувати</button>
         </form>
 
         <div id="result" class="result" style="display: none;"></div>
         <div id="formula" class="formula" style="display: none;"></div>
-        <button id="share-btn" class="share-btn" style="display: none;" onclick="shareFormula()">Поділитися формулою</button>
+        <button id="share-btn" class="share-btn" onclick="shareFormula()">Поділитися</button>
         <div class="footer">
             <a href="https://www.facebook.com/profile.php?id=100001232615511" target="_blank">created by ODIN</a>
         </div>
@@ -154,17 +149,11 @@
 
     <script>
         function calculateFuel() {
-            // Отримання введених даних
-            const a = parseFloat(document.getElementById("a").value);
-            const b = parseFloat(document.getElementById("b").value);
-            const v = parseFloat(document.getElementById("v").value);
-            const g = parseFloat(document.getElementById("g").value);
-
-            // Перевірка на валідність
-            if (isNaN(a) || isNaN(b) || isNaN(v) || isNaN(g)) {
-                alert("Будь ласка, заповніть усі поля правильно!");
-                return;
-            }
+            // Отримання значень з полів або встановлення значення 0, якщо поле порожнє
+            const a = parseFloat(document.getElementById("a").value) || 0;
+            const b = parseFloat(document.getElementById("b").value) || 0;
+            const v = parseFloat(document.getElementById("v").value) || 0;
+            const g = parseFloat(document.getElementById("g").value) || 0;
 
             // Розрахунок
             const fuelWithLoad = (a / 100) * b * 1.2;
@@ -175,8 +164,8 @@
             // Округлення результату
             const roundedFuel = Math.round(totalFuel);
 
-            // Формування виведення формули із результатом
-            const formula = `(${a} ÷ 100) × ${b} × 1.2 + (${a} ÷ 100) × ${v} + ${g} × 25 × (${a} ÷ 100) = ${roundedFuel} літрів`;
+            // Формування тексту формули
+            const formula = `(${a} ÷ 100) × ${b} × 1.2 + (${a} ÷ 100) × ${v} + ${g} × 25 × (${a} ÷ 100) = ${roundedFuel} л.`;
 
             // Виведення результату
             const resultDiv = document.getElementById("result");
@@ -184,13 +173,13 @@
             const shareBtn = document.getElementById("share-btn");
 
             resultDiv.style.display = "block";
-            resultDiv.innerHTML = `Обсяг списаного палива: <strong>${roundedFuel}</strong> літрів`;
+            resultDiv.innerHTML = `Обсяг списаного палива: <strong>${roundedFuel}</strong> л.`;
 
-            // Виведення формули із результатом
+            // Виведення формули
             formulaDiv.style.display = "block";
-            formulaDiv.innerHTML = `${formula}`;
+            formulaDiv.innerHTML = formula;
 
-            // Активувати кнопку поділитися
+            // Показ кнопки "Поділитися"
             shareBtn.style.display = "inline-block";
             shareBtn.setAttribute("data-formula", formula);
         }
