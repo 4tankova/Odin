@@ -156,14 +156,11 @@
             const v = parseFloat(document.getElementById("v").value) || 0;
             const g = parseFloat(document.getElementById("g").value) || 0;
 
-            // Розрахунок
-            const fuelWithLoad = (a / 100) * b * 1.2;
-            const fuelWithoutLoad = (a / 100) * v;
-            const fuelByHours = g * 25 * (a / 100);
+            // Розрахунок з урахуванням округлення
+            const fuelWithLoad = Math.round((a / 100) * b * 1.2);
+            const fuelWithoutLoad = Math.round((a / 100) * v);
+            const fuelByHours = Math.round(g * 25 * (a / 100));
             const totalFuel = fuelWithLoad + fuelWithoutLoad + fuelByHours;
-
-            // Округлення результату
-            const roundedFuel = Math.round(totalFuel);
 
             // Формування тексту формули
             const formulaHTML = `
@@ -172,23 +169,23 @@
                         <span class="top">${b} км × ${a} л</span>
                         <span class="bottom">100</span>
                     </span>
-                    = ${Math.floor(fuelWithoutLoad)} л
+                    = ${fuelWithoutLoad} л
                 </div>
                 <div>
                     <span class="fraction">
                         <span class="top">${b} км × ${a} л</span>
                         <span class="bottom">100</span>
                     </span>
-                    × 1.2 = ${Math.floor(fuelWithLoad)} л
+                    × 1.2 = ${fuelWithLoad} л
                 </div>
                 <div>
                     <span class="fraction">
                         <span class="top">${g} м/г × 25 км × ${a} л</span>
                         <span class="bottom">100</span>
                     </span>
-                    = ${Math.floor(fuelByHours)} л
+                    = ${fuelByHours} л
                 </div>
-                <div><strong>Всього витрачено:</strong> ${Math.floor(fuelWithoutLoad)} л + ${Math.floor(fuelWithLoad)} л + ${Math.floor(fuelByHours)} л = ${roundedFuel} л</div>
+                <div><strong>Всього витрачено:</strong> ${fuelWithoutLoad} л + ${fuelWithLoad} л + ${fuelByHours} л = ${totalFuel} л</div>
             `;
 
             // Виведення результату
@@ -196,7 +193,7 @@
             const formulaDiv = document.getElementById("formula");
 
             resultDiv.style.display = "block";
-            resultDiv.innerHTML = `Обсяг списаного палива: <strong>${roundedFuel}</strong> л.`;
+            resultDiv.innerHTML = `Обсяг списаного палива: <strong>${totalFuel}</strong> л.`;
 
             // Виведення формули
             formulaDiv.style.display = "block";
