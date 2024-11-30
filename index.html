@@ -77,26 +77,28 @@
         }
         .formula {
             margin-top: 10px;
-            color: #333;
-            font-size: 16px;
-            font-weight: normal;
-            background: #f1f1f1;
+            font-size: 18px;
+            font-weight: bold;
+            background: #fff;
             padding: 10px;
+            border: 1px solid #ccc;
             border-radius: 8px;
+            text-align: center;
+            font-family: "Courier New", Courier, monospace;
+        }
+        .fraction {
             display: inline-block;
+            text-align: center;
+            vertical-align: middle;
         }
-        .share-btn {
-            margin-top: 10px;
-            background-color: #28a745;
-            color: white;
-            padding: 10px 15px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            display: none;
+        .fraction .top {
+            border-bottom: 2px solid #000;
+            display: block;
+            padding: 0 5px;
         }
-        .share-btn:hover {
-            background-color: #218838;
+        .fraction .bottom {
+            display: block;
+            padding: 0 5px;
         }
         .footer {
             margin-top: 30px;
@@ -141,7 +143,6 @@
 
         <div id="result" class="result" style="display: none;"></div>
         <div id="formula" class="formula" style="display: none;"></div>
-        <button id="share-btn" class="share-btn" onclick="shareFormula()">Поділитися</button>
         <div class="footer">
             <a href="https://www.facebook.com/profile.php?id=100001232615511" target="_blank">created by ODIN</a>
         </div>
@@ -165,36 +166,41 @@
             const roundedFuel = Math.round(totalFuel);
 
             // Формування тексту формули
-            const formula = `(${a} ÷ 100) × ${b} × 1.2 + (${a} ÷ 100) × ${v} + ${g} × 25 × (${a} ÷ 100) = ${roundedFuel} л.`;
+            const formulaHTML = `
+                <div>
+                    <span class="fraction">
+                        <span class="top">${b} км × ${a} л</span>
+                        <span class="bottom">100</span>
+                    </span>
+                    = ${Math.floor(fuelWithoutLoad)} л
+                </div>
+                <div>
+                    <span class="fraction">
+                        <span class="top">${b} км × ${a} л</span>
+                        <span class="bottom">100</span>
+                    </span>
+                    × 1.2 = ${Math.floor(fuelWithLoad)} л
+                </div>
+                <div>
+                    <span class="fraction">
+                        <span class="top">${g} м/г × 25 км × ${a} л</span>
+                        <span class="bottom">100</span>
+                    </span>
+                    = ${Math.floor(fuelByHours)} л
+                </div>
+                <div><strong>Всього витрачено:</strong> ${Math.floor(fuelWithoutLoad)} л + ${Math.floor(fuelWithLoad)} л + ${Math.floor(fuelByHours)} л = ${roundedFuel} л</div>
+            `;
 
             // Виведення результату
             const resultDiv = document.getElementById("result");
             const formulaDiv = document.getElementById("formula");
-            const shareBtn = document.getElementById("share-btn");
 
             resultDiv.style.display = "block";
             resultDiv.innerHTML = `Обсяг списаного палива: <strong>${roundedFuel}</strong> л.`;
 
             // Виведення формули
             formulaDiv.style.display = "block";
-            formulaDiv.innerHTML = formula;
-
-            // Показ кнопки "Поділитися"
-            shareBtn.style.display = "inline-block";
-            shareBtn.setAttribute("data-formula", formula);
-        }
-
-        function shareFormula() {
-            const formula = document.getElementById("share-btn").getAttribute("data-formula");
-
-            if (navigator.share) {
-                navigator.share({
-                    title: "Формула розрахунку палива",
-                    text: formula
-                }).catch(error => console.log("Error sharing", error));
-            } else {
-                alert("Ваш браузер не підтримує функцію поділитися.");
-            }
+            formulaDiv.innerHTML = formulaHTML;
         }
     </script>
 </body>
