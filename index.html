@@ -163,31 +163,57 @@
             const fuelByHours = Math.round(g * 25 * (a / 100));
             const totalFuel = fuelWithLoad + fuelWithoutLoad + fuelByHours;
 
-            // Формування тексту формули
-            const formulaHTML = `
-                <div>
-                    <span class="fraction">
-                        <span class="top">${b} км × ${a} л</span>
-                        <span class="bottom">100</span>
-                    </span>
-                    × 1.2 = ${fuelWithLoad} л
-                </div>
-                <div>
-                    <span class="fraction">
-                        <span class="top">${v} км × ${a} л</span>
-                        <span class="bottom">100</span>
-                    </span>
-                    = ${fuelWithoutLoad} л
-                </div>
-                <div>
-                    <span class="fraction">
-                        <span class="top">${g} м/г × 25 км × ${a} л</span>
-                        <span class="bottom">100</span>
-                    </span>
-                    = ${fuelByHours} л
-                </div>
-                <div><strong>Всього витрачено:</strong> ${fuelWithoutLoad} л + ${fuelWithLoad} л + ${fuelByHours} л = ${totalFuel} л</div>
-            `;
+            // Формування тексту формули з перевіркою значень
+            let formulaHTML = "";
+
+            if (fuelWithLoad > 0) {
+                formulaHTML += `
+                    <div>
+                        <span class="fraction">
+                            <span class="top">${b} км × ${a} л</span>
+                            <span class="bottom">100</span>
+                        </span>
+                        × 1.2 = ${fuelWithLoad} л
+                    </div>
+                `;
+            }
+
+            if (fuelWithoutLoad > 0) {
+                formulaHTML += `
+                    <div>
+                        <span class="fraction">
+                            <span class="top">${v} км × ${a} л</span>
+                            <span class="bottom">100</span>
+                        </span>
+                        = ${fuelWithoutLoad} л
+                    </div>
+                `;
+            }
+
+            if (fuelByHours > 0) {
+                formulaHTML += `
+                    <div>
+                        <span class="fraction">
+                            <span class="top">${g} м/г × 25 км × ${a} л</span>
+                            <span class="bottom">100</span>
+                        </span>
+                        = ${fuelByHours} л
+                    </div>
+                `;
+            }
+
+            // Формування тексту для загального результату без нулів
+            let totalParts = [];
+            if (fuelWithLoad > 0) totalParts.push(`${fuelWithLoad} л`);
+            if (fuelWithoutLoad > 0) totalParts.push(`${fuelWithoutLoad} л`);
+            if (fuelByHours > 0) totalParts.push(`${fuelByHours} л`);
+            let totalFormula = totalParts.join(' + ');
+
+            if (totalParts.length > 1) {
+                totalFormula += ` = ${totalFuel} л`;
+            }
+
+            formulaHTML += `<div><strong>Всього витрачено:</strong> ${totalFormula}</div>`;
 
             // Виведення результату
             const resultDiv = document.getElementById("result");
